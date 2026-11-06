@@ -1,0 +1,86 @@
+{\rtf1\ansi\ansicpg949\cocoartf2870
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red131\green0\blue165;\red255\green255\blue255;\red0\green0\blue0;
+\red15\green112\blue1;\red19\green85\blue52;\red0\green0\blue255;\red86\green65\blue25;\red144\green1\blue18;
+}
+{\*\expandedcolortbl;;\cssrgb\c59216\c13725\c70588;\cssrgb\c100000\c100000\c100000;\cssrgb\c0\c0\c0;
+\cssrgb\c0\c50196\c0;\cssrgb\c6667\c40000\c26667;\cssrgb\c0\c0\c100000;\cssrgb\c41569\c32157\c12941;\cssrgb\c63922\c8235\c8235;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs40 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 import\cf0 \strokec4  numpy \cf2 \strokec2 as\cf0 \strokec4  np\cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf5 \cb3 \strokec5 # 1) \uc0\u55176 \u49828 \u53664 \u44536 \u47016  \u44592 \u48152  \u49688 \u46041  Otsu \u51060 \u51652 \u54868 \cf0 \cb1 \strokec4 \
+\
+\cf5 \cb3 \strokec5 # img.flatten(): 2D \uc0\u51060 \u48120 \u51648  \u48176 \u50676 \u51012  1D \u48176 \u50676 \u47196  \u54204 \u52840 \cf0 \cb1 \strokec4 \
+\cf5 \cb3 \strokec5 # - all_pixels: \uc0\u44033  \u48157 \u44592 \u44050 (0~255)\u50640  \u54644 \u45817 \u54616 \u45716  \u54589 \u49472  \u44060 \u49688  \u48176 \u50676 \cf0 \cb1 \strokec4 \
+\cf5 \cb3 \strokec5 # - bins: \uc0\u44396 \u44036  \u44221 \u44228 \u44050  \u48176 \u50676  (\u49324 \u50857 \u54616 \u51648  \u50506 \u50500 \u46020  \u46120 )\cf0 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \cb3 all_pixels, bins = np.histogram(\cb1 \
+\cb3     img.flatten(),   \cf5 \strokec5 # \uc0\u48516 \u49437 \u54624  \u45936 \u51060 \u53552 \cf0 \cb1 \strokec4 \
+\cb3     bins = \cf6 \strokec6 256\cf0 \strokec4 ,      \cf5 \strokec5 # 0~255 \uc0\u48157 \u44592 \u44050 \u51012  256\u44060  \u44396 \u44036 \u51004 \u47196  \u45208 \u45588 \cf0 \cb1 \strokec4 \
+\cb3     range = (\cf6 \strokec6 0\cf0 \strokec4 , \cf6 \strokec6 256\cf0 \strokec4 ) \cf5 \strokec5 # \uc0\u48157 \u44592 \u44050  \u48276 \u50948  \u51648 \u51221 \cf0 \cb1 \strokec4 \
+\cb3 )\cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf5 \cb3 \strokec5 # total: \uc0\u51060 \u48120 \u51648  \u51204 \u52404  \u54589 \u49472  \u49688  (\u45458 \u51060 \'d7\u45320 \u48708 )\cf0 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \cb3 total = img.size\cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf5 \cb3 \strokec5 # sum_total: \uc0\u51204 \u52404  \u54589 \u49472  \u48157 \u44592  \u54633 \cf0 \cb1 \strokec4 \
+\cf5 \cb3 \strokec5 #   np.arange(256): [0,1,2,...,255]\cf0 \cb1 \strokec4 \
+\cf5 \cb3 \strokec5 #   dot \uc0\u50672 \u49328 \u51004 \u47196  (\u48157 \u44592 \u44050  \'d7 \u54644 \u45817  \u48157 \u44592  \u54589 \u49472  \u44060 \u49688 )\u51032  \u52509 \u54633  \u44228 \u49328 \cf0 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \cb3 sum_total = np.dot(np.arange(\cf6 \strokec6 256\cf0 \strokec4 ), all_pixels)\cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf5 \cb3 \strokec5 # Otsu \uc0\u50508 \u44256 \u47532 \u51608  \u48320 \u49688  \u52488 \u44592 \u54868 \cf0 \cb1 \strokec4 \
+\cf5 \cb3 \strokec5 # \uc0\u48176 \u44221 \u53364 \u47000 \u49828 (\u44592 \u51456 \u44050 \u48372 \u45796  \u50612 \u46160 \u50868  \u54589 \u49472  \u47924 \u47532 )\cf0 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \cb3 sumB = \cf6 \strokec6 0\cf0 \strokec4        \cf5 \strokec5 # \uc0\u48176 \u44221  \u53364 \u47000 \u49828 (\u54589 \u49472 \u44050  \u8804  t)\u51032  \u48157 \u44592  \u54633  / \u44536  \u50612 \u46160 \u50868  \u54589 \u49472 \u46308 \u51032  \u48157 \u44592  \u52509 \u54633 \u51008  \u50620 \u47560 \u51064 \u44032 ?\cf0 \cb1 \strokec4 \
+\cb3 wB = \cf6 \strokec6 0\cf0 \strokec4          \cf5 \strokec5 # \uc0\u48176 \u44221  \u53364 \u47000 \u49828  \u54589 \u49472  \u49688  / \u54788 \u51116  \u52964 \u53944 \u46972 \u51064  \u44592 \u51456 \u50640  \u49549 \u54620  \u50612 \u46160 \u50868  \u54589 \u49472 \u51060  \u52509  \u47751  \u44060 \u51064 \u44032 ?\cf0 \cb1 \strokec4 \
+\cb3 max_var = \cf6 \strokec6 0\cf0 \strokec4     \cf5 \strokec5 # \uc0\u52572 \u45824  \u53364 \u47000 \u49828  \u44036  \u48516 \u49328  \u44050  \u51200 \u51109 \u50857 \cf0 \cb1 \strokec4 \
+\cb3 threshold = \cf6 \strokec6 0\cf0 \strokec4   \cf5 \strokec5 # \uc0\u52572 \u51201  \u51076 \u44228 \u44050  \u51200 \u51109 \u50857 \cf0 \cb1 \strokec4 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf5 \cb3 \strokec5 # t: \uc0\u51076 \u44228 \u44050  \u54980 \u48372 (0~255)\u47484  \u54616 \u45208 \u50473  \u45824 \u51077 \u54616 \u47728  \u52572 \u51201 \u44050  \u52286 \u44592 \cf0 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \strokec2 for\cf0 \strokec4  t \cf7 \strokec7 in\cf0 \strokec4  \cf8 \strokec8 range\cf0 \strokec4 (\cf6 \strokec6 256\cf0 \strokec4 ):\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \cb3     wB += all_pixels[t]            \cf5 \strokec5 # \uc0\u54788 \u51116  t\u44050 \u44620 \u51648 \u51032  \u54589 \u49472  \u49688  \u45572 \u51201  \u8594  \u48176 \u44221  \u50669 \u54624 \cf0 \cb1 \strokec4 \
+\cb3     \cf2 \strokec2 if\cf0 \strokec4  wB == \cf6 \strokec6 0\cf0 \strokec4  \cf7 \strokec7 or\cf0 \strokec4  wB == total:\cb1 \
+\cb3         \cf5 \strokec5 # \uc0\u48176 \u44221  \u54589 \u49472 \u51060  \u50630 \u44144 \u45208  \u51204 \u52404  \u54589 \u49472 \u51060  \u48176 \u44221 \u51060 \u47732  \u44228 \u49328  \u48520 \u54596 \u50836 \cf0 \cb1 \strokec4 \
+\cb3         \cf2 \strokec2 continue\cf0 \cb1 \strokec4 \
+\cb3     wF = total - wB                \cf5 \strokec5 # \uc0\u44061 \u52404  \u53364 \u47000 \u49828 (\u54589 \u49472 \u44050  > t) \u54589 \u49472  \u49688 \cf0 \cb1 \strokec4 \
+\cb3     sumB += t * all_pixels[t]      \cf5 \strokec5 # \uc0\u48176 \u44221  \u53364 \u47000 \u49828 \u51032  \u48157 \u44592  \u54633  \u45572 \u51201 \cf0 \cb1 \strokec4 \
+\cb3     mB = sumB / wB                 \cf5 \strokec5 # \uc0\u48176 \u44221  \u53364 \u47000 \u49828  \u54217 \u44512  \u48157 \u44592  / \u50612 \u46160 \u50868  \u44536 \u47353 \u51032  \u54217 \u44512  \u48157 \u44592 \u45716  \u50620 \u47560 \u51064 \u44032 ?\cf0 \cb1 \strokec4 \
+\cb3     mF = (sum_total - sumB) / wF   \cf5 \strokec5 # \uc0\u44061 \u52404  \u53364 \u47000 \u49828  \u54217 \u44512  \u48157 \u44592 \cf0 \cb1 \strokec4 \
+\cb3     \cf5 \strokec5 # \uc0\u44032 \u51109  \u54988 \u47469 \u54620  \u52964 \u53944 \u46972 \u51064  \u52286 \u44592  (var_between, \u52572 \u45824  \u48516 \u49328 )\cf0 \cb1 \strokec4 \
+\cb3     \cf5 \strokec5 # \uc0\u53364 \u47000 \u49828  \u44036  \u48516 \u49328 (variance) \u44228 \u49328 \cf0 \cb1 \strokec4 \
+\cb3     var_between = wB * wF * (mB - mF) ** \cf6 \strokec6 2\cf0 \cb1 \strokec4 \
+\
+\cb3     \cf5 \strokec5 # \uc0\u44032 \u51109  \u54988 \u47469 \u54620  \u52964 \u53944 \u46972 \u51064  \u52286 \u44592  (var_between, \u52572 \u45824  \u48516 \u49328 )\cf0 \cb1 \strokec4 \
+\cb3     \cf5 \strokec5 # \uc0\u52572 \u45824  \u48516 \u49328 \u51068  \u46412  \u51076 \u44228 \u44050  \u50629 \u45936 \u51060 \u53944 \cf0 \cb1 \strokec4 \
+\cb3     \cf2 \strokec2 if\cf0 \strokec4  var_between > max_var:\cb1 \
+\cb3         max_var = var_between\cb1 \
+\cb3         threshold = t\cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf8 \cb3 \strokec8 print\cf0 \strokec4 (\cf7 \strokec7 f\cf9 \strokec9 "\uc0\u44228 \u49328 \u46108  Otsu \u51076 \u44228 \u44050 : \cf0 \strokec4 \{threshold\}\cf9 \strokec9 "\cf0 \strokec4 )\cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf5 \cb3 \strokec5 # threshold \uc0\u51201 \u50857  \u51060 \u51652 \u54868 \cf0 \cb1 \strokec4 \
+\cf5 \cb3 \strokec5 # (img > threshold): True/False \uc0\u48176 \u50676  \u49373 \u49457  \u8594  astype(uint8)\u51004 \u47196  0/1 \u8594  *255\u47196  0/255 \u51060 \u48120 \u51648  \u49373 \u49457 \cf0 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \cb3 manual_otsu = (img > threshold).astype(np.uint8) * \cf6 \strokec6 255\cf0 \cb1 \strokec4 \
+\
+\cb3 plt.imshow(manual_otsu, cmap=\cf9 \strokec9 'gray'\cf0 \strokec4 )\cb1 \
+\cb3 plt.title(\cf9 \strokec9 "Manual Otsu Binarization"\cf0 \strokec4 )\cb1 \
+\cb3 plt.axis(\cf9 \strokec9 'off'\cf0 \strokec4 )\cb1 \
+\cb3 plt.show()\cb1 \
+}
