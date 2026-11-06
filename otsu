@@ -1,0 +1,58 @@
+import numpy as np
+
+# 1) 히스토그램 기반 수동 Otsu 이진화
+
+# img.flatten(): 2D 이미지 배열을 1D 배열로 펼침
+# - all_pixels: 각 밝기값(0~255)에 해당하는 픽셀 개수 배열
+# - bins: 구간 경계값 배열 (사용하지 않아도 됨)
+all_pixels, bins = np.histogram(
+    img.flatten(),   # 분석할 데이터
+    bins = 256,      # 0~255 밝기값을 256개 구간으로 나눔
+    range = (0, 256) # 밝기값 범위 지정
+)
+
+# total: 이미지 전체 픽셀 수 (높이×너비)
+total = img.size
+
+# sum_total: 전체 픽셀 밝기 합
+#   np.arange(256): [0,1,2,...,255]
+#   dot 연산으로 (밝기값 × 해당 밝기 픽셀 개수)의 총합 계산
+sum_total = np.dot(np.arange(256), all_pixels)
+
+# Otsu 알고리즘 변수 초기화
+# 배경클래스(기준값보다 어두운 픽셀 무리)
+sumB = 0       # 배경 클래스(픽셀값 ≤ t)의 밝기 합 / 그 어두운 픽셀들의 밝기 총합은 얼마인가?
+wB = 0         # 배경 클래스 픽셀 수 / 현재 커트라인 기준에 속한 어두운 픽셀이 총 몇 개인가?
+max_var = 0    # 최대 클래스 간 분산 값 저장용
+threshold = 0  # 최적 임계값 저장용
+
+# t: 임계값 후보(0~255)를 하나씩 대입하며 최적값 찾기
+for t in range(256):
+    wB += all_pixels[t]            # 현재 t값까지의 픽셀 수 누적 → 배경 역할
+    if wB == 0 or wB == total:
+        # 배경 픽셀이 없거나 전체 픽셀이 배경이면 계산 불필요
+        continue
+    wF = total - wB                # 객체 클래스(픽셀값 > t) 픽셀 수
+    sumB += t * all_pixels[t]      # 배경 클래스의 밝기 합 누적
+    mB = sumB / wB                 # 배경 클래스 평균 밝기 / 어두운 그룹의 평균 밝기는 얼마인가?
+    mF = (sum_total - sumB) / wF   # 객체 클래스 평균 밝기
+    # 가장 훌륭한 커트라인 찾기 (var_between, 최대 분산)
+    # 클래스 간 분산(variance) 계산
+    var_between = wB * wF * (mB - mF) ** 2
+
+    # 가장 훌륭한 커트라인 찾기 (var_between, 최대 분산)
+    # 최대 분산일 때 임계값 업데이트
+    if var_between > max_var:
+        max_var = var_between
+        threshold = t
+
+print(f"계산된 Otsu 임계값: {threshold}")
+
+# threshold 적용 이진화
+# (img > threshold): True/False 배열 생성 → astype(uint8)으로 0/1 → *255로 0/255 이미지 생성
+manual_otsu = (img > threshold).astype(np.uint8) * 255
+
+plt.imshow(manual_otsu, cmap='gray')
+plt.title("Manual Otsu Binarization")
+plt.axis('off')
+plt.show()
