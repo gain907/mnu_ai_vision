@@ -1,0 +1,27 @@
+from PIL import Image, ImageDraw, ImageFont
+import numpy as np
+
+def draw_ocr(image, boxes, txts, scores=None, font_path=font_path):
+
+
+    if isinstance(image, Image.Image):
+        img = image.copy()
+    else:
+        img = Image.fromarray(image)
+
+    draw = ImageDraw.Draw(img)
+    font = ImageFont.truetype(font_path, 20) # 폰트 크기 20으로 설정
+
+    for idx, (box, txt) in enumerate(zip(boxes, txts)):
+
+        box = np.array(box).astype(np.int32)
+        draw.polygon(box.flatten().tolist(), outline='red', width= 3)
+
+        top_left = box[np.argmin(box[:, 1])] 
+        text_x, text_y = top_left[0], top_left[1] - 20 
+
+        text_x = max(text_x, 0)
+        text_y = max(text_y, 0)
+
+        draw.text((text_x, text_y), txt, fill='blue', font=font)
+    return np.array(img)
